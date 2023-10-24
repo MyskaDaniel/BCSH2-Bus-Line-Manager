@@ -18,5 +18,11 @@ build_property.ProjectDir = C:\Users\danmy\RiderProjects\BusLineManager\BusLineM
 [C:/Users/danmy/RiderProjects/BusLineManager/BusLineManager/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/danmy/RiderProjects/BusLineManager/BusLineManager/Styles/BlockStyles.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/Users/danmy/RiderProjects/BusLineManager/BusLineManager/Styles/ControlsStyles.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/danmy/RiderProjects/BusLineManager/BusLineManager/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

@@ -3,18 +3,46 @@
         xmlns:vm="using:BusLineManager.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="650"
         x:Class="BusLineManager.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
         Icon="/Assets/avalonia-logo.ico"
         Title="BusLineManager">
-
+    
+    <Window.Styles>
+        <StyleInclude Source="/Styles/BlockStyles.axaml" />
+        <StyleInclude Source="/Styles/ControlsStyles.axaml" />
+    </Window.Styles>
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) 
+            <TextBlock Text="{Binding MyText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>  -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+    
+    <Grid Name="MainGrid" ShowGridLines="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45" />
+            <RowDefinition Height="*" /> 
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" /> 
+            <ColumnDefinition Width="*" /> 
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="2" Classes="ControlPane">
+            <Button Classes="Control" Click="CloseApplication" HorizontalAlignment="Right">
+                <Image Source="/Assets/icons8-close-64.png"></Image>
+            </Button>
+        </StackPanel>
+        <ScrollViewer Grid.Column="0" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="DopravceList" Orientation="Vertical" Spacing="5"></StackPanel>
+        </ScrollViewer>
+        
+    </Grid>
+    
 </Window>
