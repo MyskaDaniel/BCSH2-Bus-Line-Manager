@@ -126,3 +126,5 @@ _ReSharper*/
 *.userosscache
 *.sln.docstates
 
+obj/
+bin/
