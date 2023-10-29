@@ -127,4 +127,5 @@ _ReSharper*/
 *.sln.docstates
 
 obj/
+
 bin/
