@@ -1,0 +1,40 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BusLineManager.Models.BusOperatorPane">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/BlockStyles.axaml" />
+        
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="resm:BusLineManager.Assets.ForzanLight-ALWAA.ttf"/>
+        </Style>
+        
+        <Style Selector="TextBlock#BusOperatorName">
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="Margin" Value="10,10,0,0"/> 
+        </Style>
+        
+        <Style Selector="TextBlock#AvailableBuses">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="10,10,0,0"/> 
+        </Style>
+        
+        <Style Selector="TextBlock#OnLineBuses">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Margin" Value="25,10,0,0"/> 
+        </Style>
+    </UserControl.Styles>
+    
+    <DockPanel Name="BusProviderDockPanel" Classes="Dopravce" HorizontalAlignment="Stretch">
+        <DockPanel DockPanel.Dock="Top">
+            <TextBlock Name="BusOperatorName"></TextBlock>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <TextBlock Name="AvailableBuses"></TextBlock>
+            <TextBlock Name="OnLineBuses" DockPanel.Dock="Right"></TextBlock>
+        </DockPanel>
+    </DockPanel>
+</UserControl>
+

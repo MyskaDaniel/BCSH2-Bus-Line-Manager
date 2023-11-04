@@ -3,6 +3,7 @@
         xmlns:vm="using:BusLineManager.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:busLineManager="clr-namespace:BusLineManager"
         mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="650"
         x:Class="BusLineManager.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -22,7 +23,7 @@
             <TextBlock Text="{Binding MyText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>  -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    
+
     <Grid Name="MainGrid" ShowGridLines="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="45" />
@@ -34,14 +35,24 @@
             <ColumnDefinition Width="*" /> 
         </Grid.ColumnDefinitions>
         
-        <StackPanel Grid.Column="2" Classes="ControlPane">
+        <StackPanel Grid.Row="0" Grid.Column="2" Classes="ControlPaneRight">
             <Button Classes="Control" Click="CloseApplication" HorizontalAlignment="Right">
                 <Image Source="/Assets/icons8-close-64.png"></Image>
             </Button>
         </StackPanel>
-        <ScrollViewer Grid.Column="0" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <StackPanel Name="DopravceList" Orientation="Vertical" Spacing="5"></StackPanel>
-        </ScrollViewer>
+        
+        <StackPanel Grid.Row="0" Grid.Column="0" Classes="ControlPaneLeft">
+            <Button Classes="Control" HorizontalAlignment="Left">
+                <Image Source="/Assets/icons8-add-64.png" ></Image>
+            </Button>
+
+            <Button Classes="Control">
+                <Image Source="/Assets/icons8-remove-64.png"></Image>
+            </Button>
+        </StackPanel>
+        
+        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" >
+        </ListBox>
         
     </Grid>
     

@@ -27,12 +27,11 @@
 
 
     <ItemGroup>
-      <Folder Include="Core\Data\" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Compile Update="Views\BusOperatorPane.axaml.cs">
+      <Compile Update="Views\Windows\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\Controls\BusOperatorPane.axaml.cs">
         <DependentUpon>BusOperatorPane.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>

@@ -2,7 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Design.PreviewWith>
         <Border Padding="20">
-            <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
 
@@ -15,7 +14,16 @@
         <Setter Property="Background" Value="Transparent"></Setter>
     </Style>
     
-    <Style Selector="StackPanel.ControlPane">
+    <Style Selector="StackPanel.ControlPaneLeft">
+        <Setter Property="Height" Value="45"></Setter>
+        <Setter Property="MaxHeight" Value="45"></Setter>
+        <Setter Property="Background" Value="Transparent"></Setter>
+        <Setter Property="VerticalAlignment" Value="Top"></Setter>
+        <Setter Property="Spacing" Value="10"></Setter>
+        <Setter Property="Orientation" Value="Horizontal"></Setter>
+    </Style>
+    
+    <Style Selector="StackPanel.ControlPaneRight">
         <Setter Property="Height" Value="45"></Setter>
         <Setter Property="MaxHeight" Value="45"></Setter>
         <Setter Property="Background" Value="Transparent"></Setter>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
+using Avalonia.Controls.Documents;
 using BusLineManager.Core.Data;
 
 namespace BusLineManager.Core.Database;
@@ -65,7 +67,7 @@ public static class DbUtils
             new(0, "Expres", "101010"),
             new(1, "NeVcas", "202020"),
             new(2, "Erriva", "303030"),
-            new(3, "RychloBus", "404040")
+            new(3, "RychloSuperTurboBus", "404040")
         };
         
         foreach (var busOperator in busOperators)
@@ -99,24 +101,29 @@ public static class DbUtils
     public static void ShowDataFromDatabase()
     {
         var conn = new Database();
+
         Console.WriteLine("BusOperators:");
-        List<BusOperator> busOperators = conn.GetAllBusOperators();
-        foreach (var busOperator in busOperators)
+        /* Zkousel jsem si Span */
+        ReadOnlySpan<BusOperator> busOperators = CollectionsMarshal.AsSpan(conn.GetAllBusOperators());
+        for (int i = 0; i < busOperators.Length; i++)
         {
+            var busOperator = busOperators[i];
             Console.WriteLine($"ID: {busOperator.Id}, Name: {busOperator.Name}, ICO: {busOperator.Ico}");
         }
 
         Console.WriteLine("\nBusLines:");
-        List<BusLine> busLines = conn.GetAllLines();
-        foreach (var busLine in busLines)
+        ReadOnlySpan<BusLine> busLines = CollectionsMarshal.AsSpan( conn.GetAllLines());
+        for (int i = 0; i < busLines.Length; i++)
         {
+            var busLine = busLines[i];
             Console.WriteLine($"ID: {busLine.Id}, Name: {busLine.Name}, BusOperatorID: {busLine.BusOpearatorId}, Start: {busLine.StartStation}, End: {busLine.EndStation}");
         }
 
         Console.WriteLine("\nBuses:");
-        List<Bus> buses = conn.GetAllBuses();
-        foreach (var bus in buses)
+        ReadOnlySpan<Bus> buses = CollectionsMarshal.AsSpan(conn.GetAllBuses());
+        for (int i = 0; i < buses.Length; i++)
         {
+            var bus = buses[i];
             Console.WriteLine($"ID: {bus.Id}, SPZ: {bus.Spz}, BusOperatorID: {bus.BusOperatorId}, Capacity: {bus.Capacity}");
         }
     }
