@@ -12,8 +12,10 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Core.Database.DbUtils.CleanUp(); //For development //TODO remove it
-        Core.Database.DbUtils.PrintTablesWithColumns();
+        //For development //TODO remove it
+        Core.Database.DbUtils.CleanUp();
+        Core.Database.DbUtils.CreateTestData();
+        Core.Database.DbUtils.ShowDataFromDatabase();
 
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);

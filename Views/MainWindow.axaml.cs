@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
+using BusLineManager.ViewModels;
 
 namespace BusLineManager.Views;
 
@@ -12,12 +13,15 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        var win = new MainWindowViewModel();
         
-        var dlist = this.FindControl<StackPanel>("DopravceList");
+        var dlist = this.FindControl<StackPanel>("DopravceList") ?? throw new Exception("Could load Control DopravceList");
 
-        for (int i = 0; i < 10; i++)
+        var busOperators = win.GetAllBusOperators();
+
+        foreach (var op in busOperators)
         {
-            var dockPanel = CreateDockPanel(dlist.Width);
+            var dockPanel = CreateDockPanel();
             dlist.Children.Add(dockPanel);
         }
     }
@@ -27,7 +31,7 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private DockPanel CreateDockPanel(double width)
+    private DockPanel CreateDockPanel()
     {
         return new DockPanel
         {

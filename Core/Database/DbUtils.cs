@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Linq.Expressions;
+using BusLineManager.Core.Data;
 
 namespace BusLineManager.Core.Database;
 
@@ -51,6 +54,71 @@ public static class DbUtils
         }
 
         connection.Close();
+    }
+
+    public static void CreateTestData()
+    {
+        Random random = new Random(69420);
+        var conn = new Database();
+        var busOperators = new List<BusOperator>
+        {
+            new(0, "Expres", "101010"),
+            new(1, "NeVcas", "202020"),
+            new(2, "Erriva", "303030"),
+            new(3, "RychloBus", "404040")
+        };
+        
+        foreach (var busOperator in busOperators)
+        {
+           conn.InsertBusOperator(busOperator);
+        }
+        
+        var id = 0;
+        foreach (var busOperator in busOperators)
+        {
+            var numOfLines = random.Next(3, 9);
+            for (int i = 0; i < numOfLines ; i++)
+            {
+                conn.InsertLine(new BusLine(id,$"Line-{id}",busOperator.Id ?? -1,$"Start{id}",$"End{id}"));
+                id++;
+            }
+        }
+
+        id = 0;
+        foreach (var busOperator in busOperators)
+        {
+            var numOfLines = random.Next(3, 9);
+            for (int i = 0; i < numOfLines ; i++)
+            {
+                conn.InsertBus(new Bus(id,$"SPZ : {id}",busOperator.Id ?? -1,random.Next(50,101)));
+                id++;
+            }
+        }
+    }
+
+    public static void ShowDataFromDatabase()
+    {
+        var conn = new Database();
+        Console.WriteLine("BusOperators:");
+        List<BusOperator> busOperators = conn.GetAllBusOperators();
+        foreach (var busOperator in busOperators)
+        {
+            Console.WriteLine($"ID: {busOperator.Id}, Name: {busOperator.Name}, ICO: {busOperator.Ico}");
+        }
+
+        Console.WriteLine("\nBusLines:");
+        List<BusLine> busLines = conn.GetAllLines();
+        foreach (var busLine in busLines)
+        {
+            Console.WriteLine($"ID: {busLine.Id}, Name: {busLine.Name}, BusOperatorID: {busLine.BusOpearatorId}, Start: {busLine.StartStation}, End: {busLine.EndStation}");
+        }
+
+        Console.WriteLine("\nBuses:");
+        List<Bus> buses = conn.GetAllBuses();
+        foreach (var bus in buses)
+        {
+            Console.WriteLine($"ID: {bus.Id}, SPZ: {bus.Spz}, BusOperatorID: {bus.BusOperatorId}, Capacity: {bus.Capacity}");
+        }
     }
     
     private static void ClearTableData(SQLiteConnection connection, string tableName)

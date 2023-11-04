@@ -21,7 +21,7 @@ public class Database
         using var command = new SQLiteCommand(insertQuery, connection);
 
         command.Parameters.AddWithValue("@Name", busOperator.Name);
-        command.Parameters.AddWithValue("@Ico", busOperator.Ico);
+        command.Parameters.AddWithValue("@ICO", busOperator.Ico);
         command.ExecuteNonQuery();
 
         connection.Close();
@@ -32,8 +32,8 @@ public class Database
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
 
-        var insertQuery = @"INSERT INTO Lines (Name, BusOperatorID, ListOfStations, StartStation, EndStation) 
-                            VALUES (@Name, @BusOperatorID, @ListOfStations, @StartStation, @EndStation)";
+        var insertQuery = @"INSERT INTO Lines (Name, BusOperatorID, StartStation, EndStation) 
+                            VALUES (@Name, @BusOperatorID, @StartStation, @EndStation)";
     
         using var command = new SQLiteCommand(insertQuery, connection);
 
