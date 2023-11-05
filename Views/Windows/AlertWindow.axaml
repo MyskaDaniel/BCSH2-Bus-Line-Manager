@@ -1,0 +1,25 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:BusLineManager.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="BusLineManager.Views.Windows.AlertWindow"
+        x:DataType="vm:AlertViewModel"
+        Title="BusLineManager: ERROR"
+        Icon="/Assets/icons8-error-96.png"
+        WindowStartupLocation="CenterOwner"
+        Background="Lavender"
+        Width="400"
+        Height="125">
+        
+    <Window.Styles>
+        <StyleInclude Source="/Styles/TextStyles.axaml" />
+    </Window.Styles>
+    
+    <Grid RowDefinitions="*">
+        <TextBlock Text="{Binding Message}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                   TextWrapping="Wrap" FontSize="18"/>
+    </Grid>
+        
+</Window>

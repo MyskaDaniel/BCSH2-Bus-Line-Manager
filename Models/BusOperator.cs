@@ -1,3 +1,3 @@
 ﻿namespace BusLineManager.Core.Data;
 
-public record BusOperator(int? Id, string Name, string Ico);
+public record BusOperator(long? Id, string Name, string Ico);

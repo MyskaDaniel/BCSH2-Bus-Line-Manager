@@ -1,31 +1,42 @@
 using System;
-using Avalonia;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Layout;
-using BusLineManager.Models;
+using Avalonia.ReactiveUI;
 using BusLineManager.ViewModels;
+using ReactiveUI;
+using BusOperatorPane = BusLineManager.Views.Controls.BusOperatorPane;
 
-namespace BusLineManager.Views;
+namespace BusLineManager.Views.Windows;
 
-public partial class MainWindow : Window
+public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 {
     
     public MainWindow()
     {
         InitializeComponent();
-        var win = new MainWindowViewModel();
+        var viewModel = new MainWindowViewModel();
+        this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));
         
         var listBox = this.FindControl<ListBox>("BusOperatorListBox") ?? throw new Exception("Could load Control DopravceList");
 
-        var busOperators = win.GetAllBusOperators();
+        var busOperators = viewModel.BusOperators;
 
         foreach (var op in busOperators)
         {
             listBox.Items.Add(new BusOperatorPane(op));
-            //dlist.Children.Add(new BusOperatorPane(op));
         }
     }
 
     private void CloseApplication(object? sender, RoutedEventArgs e) => Close();
+    
+    private async Task DoShowDialogAsync(InteractionContext<AlertViewModel, bool> interaction)
+    {
+        var dialog = new AlertWindow();
+        dialog.DataContext = interaction.Input;
+
+        var result = await dialog.ShowDialog<bool>(this);
+        interaction.SetOutput(result);
+    }
+    
 }

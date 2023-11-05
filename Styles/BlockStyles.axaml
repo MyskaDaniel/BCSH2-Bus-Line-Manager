@@ -5,8 +5,14 @@
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
+    
     <Style Selector="DockPanel.Dopravce">
         <Setter Property="Background" Value="CornflowerBlue"></Setter>
         <Setter Property="Height" Value="150"></Setter>
+    </Style>
+    
+    <Style Selector="DockPanel.LinePane">
+        <Setter Property="Background" Value="Plum"></Setter>
+        <Setter Property="Height" Value="75"></Setter>
     </Style>
 </Styles>

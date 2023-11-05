@@ -3,10 +3,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="BusLineManager.Views.Controls.BusOperatorPane">
+             x:Class="BusLineManager.Views.Controls.LinePane">
+    
     <UserControl.Styles>
         <StyleInclude Source="/Styles/BlockStyles.axaml" />
-        <StyleInclude Source="/Styles/TextStyles.axaml" />
+        
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="resm:BusLineManager.Assets.ForzanLight-ALWAA.ttf"/>
+        </Style>
         
         <Style Selector="TextBlock#BusOperatorName">
             <Setter Property="FontSize" Value="28"/>
@@ -24,14 +28,16 @@
         </Style>
     </UserControl.Styles>
     
-    <DockPanel Name="BusProviderDockPanel" Classes="Dopravce" HorizontalAlignment="Stretch">
+    <DockPanel Name="LineDisplay" Classes="LinePane" HorizontalAlignment="Stretch">
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock Name="BusOperatorName"></TextBlock>
+            <TextBlock Name="LineName"></TextBlock>
         </DockPanel>
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock Name="AvailableBuses"></TextBlock>
-            <TextBlock Name="OnLineBuses" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock Name="StartStation"></TextBlock>
+            <TextBlock Name="EndStation" DockPanel.Dock="Right"></TextBlock>
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <TextBlock Name="BusOperatorName" DockPanel.Dock="Left"></TextBlock>
         </DockPanel>
     </DockPanel>
 </UserControl>
-

@@ -3,6 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using BusLineManager.ViewModels;
 using BusLineManager.Views;
+using MainWindow = BusLineManager.Views.Windows.MainWindow;
 
 namespace BusLineManager;
 

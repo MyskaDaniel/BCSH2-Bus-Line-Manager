@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:busLineManager="clr-namespace:BusLineManager"
         mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="650"
-        x:Class="BusLineManager.Views.MainWindow"
+        x:Class="BusLineManager.Views.Windows.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
@@ -51,8 +51,10 @@
             </Button>
         </StackPanel>
         
-        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" >
+        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" Selection="{Binding Selection}" >
         </ListBox>
+        
+        <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" Items="{Binding LinePanesItems}"></ListBox>
         
     </Grid>
     

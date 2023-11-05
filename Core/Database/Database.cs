@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Threading.Tasks;
 using BusLineManager.Core.Data;
 
 namespace BusLineManager.Core.Database;
@@ -144,5 +145,35 @@ public class Database
         connection.Close();
 
         return buses;
+    }
+
+    public async Task<List<BusLine>> GetLinesForOperatorAsync(BusOperator busOperator)
+    {
+        var lines = new List<BusLine>();
+        await using var connection = new SQLiteConnection(ConnectionString);
+        
+        await connection.OpenAsync();
+
+        const string selectQuery = "SELECT * FROM Lines WHERE BusOperatorID = @BusOperatorID";
+
+        await using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@BusOperatorID", busOperator.Id);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            var line = new BusLine(
+                Id: reader.GetInt64(0),
+                Name: reader.GetString(1),
+                BusOpearatorId: reader.GetInt64(2),
+                StartStation: reader.GetString(4),
+                EndStation: reader.GetString(5)
+                );
+
+            lines.Add(line);
+        }
+
+        return lines;
     }
 }

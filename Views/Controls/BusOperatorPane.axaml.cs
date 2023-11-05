@@ -1,23 +1,22 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
 using BusLineManager.Core.Data;
 using BusLineManager.ViewModels;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace BusLineManager.Models;
+namespace BusLineManager.Views.Controls;
 
 public partial class BusOperatorPane : UserControl
 {
+    public readonly BusOperator BusOperator;
+    
     public BusOperatorPane(BusOperator busOperator)
     {
         InitializeComponent();
-        var viewModel = new BusOperatorPaneViewModel();
+        BusOperator = busOperator;
+        var viewModel = new BusOperatorPaneViewModel(busOperator);
         
         BusOperatorName.Text = busOperator.Name;
         AvailableBuses.Text = $"Available: {viewModel.AvailableBuses}";
         OnLineBuses.Text = $"On Lines: {viewModel.OnLineBuses}";
     }
     
-    public BusOperatorPane GetBusOperatorPane => this;
 }
