@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
+using BusLineManager.Core.Data;
 using BusLineManager.ViewModels;
 using ReactiveUI;
 using BusOperatorPane = BusLineManager.Views.Controls.BusOperatorPane;
@@ -26,6 +27,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         {
             listBox.Items.Add(new BusOperatorPane(op));
         }
+        listBox.Items.Add(new BusOperatorPane(new BusOperator(99, "TestFail","TEST"))); //For test of error
     }
 
     private void CloseApplication(object? sender, RoutedEventArgs e) => Close();

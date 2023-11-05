@@ -54,7 +54,7 @@
         <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" Selection="{Binding Selection}" >
         </ListBox>
         
-        <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" Items="{Binding LinePanesItems}"></ListBox>
+        <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" ItemsSource="{Binding LinePanesItems}"></ListBox>
         
     </Grid>
     

@@ -64,10 +64,10 @@ public static class DbUtils
         var conn = new Database();
         var busOperators = new List<BusOperator>
         {
-            new(0, "Expres", "101010"),
-            new(1, "NeVcas", "202020"),
-            new(2, "Erriva", "303030"),
-            new(3, "RychloSuperTurboBus", "404040")
+            new(1, "Expres", "101010"),
+            new(2, "NeVcas", "202020"),
+            new(3, "Erriva", "303030"),
+            new(4, "RychloSuperTurboBus", "404040")
         };
         
         foreach (var busOperator in busOperators)

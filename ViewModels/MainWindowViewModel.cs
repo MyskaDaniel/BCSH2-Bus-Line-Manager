@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Controls.Selection;
+using Avalonia.Threading;
 using BusLineManager.Core.Data;
 using BusLineManager.Core.Database;
 using BusLineManager.Views.Controls;
@@ -20,12 +21,10 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     private readonly ObservableCollection<LinePane> _linePanes = new();
 
     public List<BusOperator> BusOperators => _busOperators;
-    public ObservableCollection<LinePane> LinePanesItems { get; } = new();
+    public ObservableCollection<LinePane> LinePanesItems => _linePanes;
     
     public MainWindowViewModel()
     {
-        LinePanesItems.Add(new LinePane());
-        
         ShowDialog = new Interaction<AlertViewModel, bool>();
         _busOperators = _database.GetAllBusOperators();
         Selection = new SelectionModel<BusOperatorPane>();
@@ -38,7 +37,8 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     
     private async void SelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<BusOperatorPane> args)
     {
-        var busOperatorName = "string.Empty"; //args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
+        _linePanes.Clear();
+        var busOperatorName = args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
         
         var busOperator = _busOperators.FirstOrDefault(it => it.Name == busOperatorName) ?? 
                           _database.GetAllBusOperators().FirstOrDefault(it => it.Name == busOperatorName);
@@ -53,7 +53,7 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
         var lines = await _database.GetLinesForOperatorAsync(busOperator);
         foreach (var line in lines)
         {
-            
+            _linePanes.Add(new LinePane(line));
             Console.WriteLine(line.ToString());
         }
     }
