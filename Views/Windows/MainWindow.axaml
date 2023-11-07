@@ -51,7 +51,9 @@
             </Button>
         </StackPanel>
         
-        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" Selection="{Binding BusOperatorSelection}"/>
+        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" 
+                ItemsSource="{Binding BusOperatorsItems}" Selection="{Binding BusOperatorSelection}"/>
+        
         
         <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" ItemsSource="{Binding LinePanesItems}"
                  Selection="{Binding LinesSelection}"/>

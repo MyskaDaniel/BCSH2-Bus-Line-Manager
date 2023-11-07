@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using Avalonia.Controls;
 using Avalonia.Controls.Selection;
-using Avalonia.Threading;
 using BusLineManager.Core.Data;
 using BusLineManager.Core.Database;
 using BusLineManager.Views.Controls;
+using DynamicData;
 using ReactiveUI;
 using BusOperatorPane = BusLineManager.Views.Controls.BusOperatorPane;
 
@@ -17,18 +14,19 @@ namespace BusLineManager.ViewModels;
 public class MainWindowViewModel : ViewModelBase, IReactiveObject
 {
     private readonly Database _database = new();
-    private readonly List<BusOperator> _busOperators;
+    private readonly ObservableCollection<BusOperator> _busOperators = new();
     private readonly ObservableCollection<LinePane> _linePanes = new();
     private readonly ObservableCollection<BusPane> _busPanes = new();
 
-    public List<BusOperator> BusOperators => _busOperators;
+    public ObservableCollection<BusOperator> BusOperatorsItems => _busOperators;
     public ObservableCollection<LinePane> LinePanesItems => _linePanes;
     public ObservableCollection<BusPane> BusPanesItems => _busPanes;
     
     public MainWindowViewModel()
     {
         ShowDialog = new Interaction<AlertViewModel, bool>();
-        _busOperators = _database.GetAllBusOperators();
+        _busOperators.AddRange( _database.GetAllBusOperators());
+        
         BusOperatorSelection = new SelectionModel<BusOperatorPane>();
         BusOperatorSelection.SelectionChanged += BusOperatorSelectionChanged;
         LinesSelection = new SelectionModel<LinePane>();
@@ -64,23 +62,23 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     
     private async void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
     {
-       _busPanes.Clear();
-       var busOperatorName = args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
+       /*_busPanes.Clear();
+       var lineName = args.SelectedItems[0]?.LineName.Text ?? string.Empty;;
         
-       var busOperator = _busOperators.FirstOrDefault(it => it.Name == busOperatorName) ?? 
-                         _database.GetAllBusOperators().FirstOrDefault(it => it.Name == busOperatorName);
+       var busLine = _linePanes.FirstOrDefault(it => it.Name == lineName) ?? 
+                           _database.GetLinesForOperatorAsync().Result.FirstOrDefault(it => it.Name == lineName);
        
-       if (busOperator is null)
+       if (busLine is null)
        {
-           var alert = new AlertViewModel($"Bus operator with name {busOperatorName} was not found");
+           var alert = new AlertViewModel($"Bus operator with name {lineName} was not found");
            await ShowDialog.Handle(alert);
            return;
        }
-       var buses = await _database.GetBusesForOperatorAsync(busOperator);
+       var buses = await _database.GetBusesForOperatorAsync(busLine);
        foreach (var bus in buses)
        {
            _busPanes.Add(new BusPane());
-       }
+       }*/
        
     }
 }

@@ -177,17 +177,17 @@ public class Database
         return lines;
     }
     
-    public async Task<List<Bus>> GetBusesForOperatorAsync(BusOperator busOperator)
+    public async Task<List<Bus>> GetBusesForLineAsync(BusLine line)
     {
         var buses = new List<Bus>();
         await using var connection = new SQLiteConnection(ConnectionString);
         
         await connection.OpenAsync();
 
-        const string selectQuery = "SELECT * FROM Buses WHERE BusOperatorID = @BusOperatorID";
+        const string selectQuery = "SELECT * FROM BusesNew WHERE LineId = @LineId";
 
         await using var command = new SQLiteCommand(selectQuery, connection);
-        command.Parameters.AddWithValue("@BusOperatorID", busOperator.Id);
+        command.Parameters.AddWithValue("@BusOperatorID", line.Id);
 
         await using var reader = await command.ExecuteReaderAsync();
 

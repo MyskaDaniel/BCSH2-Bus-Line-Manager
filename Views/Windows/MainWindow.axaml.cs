@@ -21,7 +21,7 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         
         var listBox = this.FindControl<ListBox>("BusOperatorListBox") ?? throw new Exception("Could load Control DopravceList");
 
-        var busOperators = viewModel.BusOperators;
+        var busOperators = viewModel.BusOperatorsItems;
 
         foreach (var op in busOperators)
         {
@@ -34,8 +34,10 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     
     private async Task DoShowDialogAsync(InteractionContext<AlertViewModel, bool> interaction)
     {
-        var dialog = new AlertWindow();
-        dialog.DataContext = interaction.Input;
+        var dialog = new AlertWindow
+        {
+            DataContext = interaction.Input
+        };
 
         var result = await dialog.ShowDialog<bool>(this);
         interaction.SetOutput(result);
