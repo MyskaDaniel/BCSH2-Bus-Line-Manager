@@ -9,8 +9,7 @@ public partial class LinePane : UserControl
     public LinePane(BusLine line)
     {
         InitializeComponent();
-        var viewModel = new LinePaneViewModel();
-
+        
         LineName.Text = line.Name;
     }
 }

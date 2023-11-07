@@ -176,4 +176,32 @@ public class Database
 
         return lines;
     }
+    
+    public async Task<List<Bus>> GetBusesForOperatorAsync(BusOperator busOperator)
+    {
+        var buses = new List<Bus>();
+        await using var connection = new SQLiteConnection(ConnectionString);
+        
+        await connection.OpenAsync();
+
+        const string selectQuery = "SELECT * FROM Buses WHERE BusOperatorID = @BusOperatorID";
+
+        await using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@BusOperatorID", busOperator.Id);
+
+        await using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+
+            buses.Add(new Bus(
+                Id: reader.GetInt32(0),
+                Spz: reader.GetString(1),
+                BusOperatorId: reader.GetInt32(2),
+                Capacity: reader.GetInt32(3))
+            );
+        }
+
+        return buses;
+    }
 }

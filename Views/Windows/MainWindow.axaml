@@ -51,10 +51,12 @@
             </Button>
         </StackPanel>
         
-        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" Selection="{Binding Selection}" >
-        </ListBox>
+        <ListBox Grid.Column="0" Grid.Row="1" Name="BusOperatorListBox" Selection="{Binding BusOperatorSelection}"/>
         
-        <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" ItemsSource="{Binding LinePanesItems}"></ListBox>
+        <ListBox Grid.Column="1" Grid.Row="1" Name="LinesListBox" ItemsSource="{Binding LinePanesItems}"
+                 Selection="{Binding LinesSelection}"/>
+        
+        <ListBox Grid.Column="2" Grid.Row="1" Name="BusListBox" ItemsSource="{Binding BusPanesItems}" />
         
     </Grid>
     

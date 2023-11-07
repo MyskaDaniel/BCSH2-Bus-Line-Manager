@@ -15,4 +15,9 @@
         <Setter Property="Background" Value="Plum"></Setter>
         <Setter Property="Height" Value="75"></Setter>
     </Style>
+    
+    <Style Selector="DockPanel.BusPane">
+        <Setter Property="Background" Value="Lavender"></Setter>
+        <Setter Property="Height" Value="75"></Setter>
+    </Style>
 </Styles>
