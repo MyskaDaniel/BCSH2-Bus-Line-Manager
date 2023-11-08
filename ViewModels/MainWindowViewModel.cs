@@ -42,6 +42,7 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     private async void BusOperatorSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<BusOperatorPane> args)
     {
         _linePanes.Clear();
+        _busPanes.Clear();
         var busOperatorName = args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
         
         var busOperator = _busOperators.FirstOrDefault(it => it.Name == busOperatorName) ?? 
@@ -64,7 +65,16 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     private async void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
     {
        _busPanes.Clear();
-       var lineName = args.SelectedItems[0]?.LineName.Text ?? string.Empty;;
+       var context = args.SelectedItems[0]?.DataContext as LinePaneViewModel;
+
+       if (context is null)
+       {
+           var alert = new AlertViewModel("Unexpected error has occurred.");
+           await ShowDialog.Handle(alert);
+           return;
+       }
+       
+       var lineName = context.LineName;
 
        var busLine = await _database.GetLineByNameAsync(lineName);
        
