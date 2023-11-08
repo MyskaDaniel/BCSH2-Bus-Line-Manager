@@ -11,5 +11,6 @@ public partial class LinePane : UserControl
         InitializeComponent();
         
         LineName.Text = line.Name;
+        
     }
 }

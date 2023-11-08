@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 using BusLineManager.Core.Data;
@@ -53,13 +52,14 @@ public class Database
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
 
-        string insertQuery = "INSERT INTO Buses (SPZ, BusOperatorID, Capacity) VALUES (@SPZ, @BusOperatorID, @Capacity)";
+        string insertQuery = "INSERT INTO BusesNew (SPZ, Capacity, BusOperatorId, LineId) VALUES (@SPZ, @Capacity,@BusOperatorID,@LineId)";
     
         using var command = new SQLiteCommand(insertQuery, connection);
 
         command.Parameters.AddWithValue("@SPZ", bus.Spz);
-        command.Parameters.AddWithValue("@BusOperatorID", bus.BusOperatorId);
         command.Parameters.AddWithValue("@Capacity", bus.Capacity);
+        command.Parameters.AddWithValue("@BusOperatorID", bus.BusOperatorId);
+        command.Parameters.AddWithValue("@LineId", bus.LineId);
     
         command.ExecuteNonQuery();
 
@@ -127,7 +127,7 @@ public class Database
         using var connection = new SQLiteConnection(ConnectionString);
         connection.Open();
 
-        var selectQuery = "SELECT * FROM Buses";
+        var selectQuery = "SELECT * FROM BusesNew";
 
         using var command = new SQLiteCommand(selectQuery, connection);
         using var reader = command.ExecuteReader();
@@ -135,10 +135,11 @@ public class Database
         while (reader.Read())
         {
             buses.Add(new Bus(
-                Id: reader.GetInt32(0),
+                Id: reader.GetInt64(0),
                 Spz: reader.GetString(1),
-                BusOperatorId: reader.GetInt32(2),
-                Capacity: reader.GetInt32(3)
+                Capacity: reader.GetInt32(2),
+                BusOperatorId: reader.GetInt64(3),
+                LineId: reader.GetInt64(4)
             ));
         }
 
@@ -177,6 +178,38 @@ public class Database
         return lines;
     }
     
+    public async Task<BusLine?> GetLineByNameAsync(string name)
+    {
+        try
+        {
+            await using var connection = new SQLiteConnection(ConnectionString);
+        
+            await connection.OpenAsync();
+
+            const string selectQuery = "SELECT * FROM Lines WHERE Name = @Name";
+
+            await using var command = new SQLiteCommand(selectQuery, connection);
+            command.Parameters.AddWithValue("@Name", name);
+
+            await using var reader = await command.ExecuteReaderAsync();
+        
+            await reader.ReadAsync();
+
+            return new BusLine(
+                Id: reader.GetInt64(0),
+                Name: reader.GetString(1),
+                BusOpearatorId: reader.GetInt64(2),
+                StartStation: reader.GetString(4),
+                EndStation: reader.GetString(5)
+            );
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return null;
+        }
+    }
+    
     public async Task<List<Bus>> GetBusesForLineAsync(BusLine line)
     {
         var buses = new List<Bus>();
@@ -187,7 +220,7 @@ public class Database
         const string selectQuery = "SELECT * FROM BusesNew WHERE LineId = @LineId";
 
         await using var command = new SQLiteCommand(selectQuery, connection);
-        command.Parameters.AddWithValue("@BusOperatorID", line.Id);
+        command.Parameters.AddWithValue("@LineId", line.Id);
 
         await using var reader = await command.ExecuteReaderAsync();
 
@@ -195,13 +228,15 @@ public class Database
         {
 
             buses.Add(new Bus(
-                Id: reader.GetInt32(0),
+                Id: reader.GetInt64(0),
                 Spz: reader.GetString(1),
-                BusOperatorId: reader.GetInt32(2),
-                Capacity: reader.GetInt32(3))
-            );
+                Capacity: reader.GetInt32(2),
+                BusOperatorId: reader.GetInt64(3),
+                LineId: reader.GetInt64(4)
+            ));
         }
 
         return buses;
     }
+    
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Controls.Selection;
@@ -62,11 +63,10 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     
     private async void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
     {
-       /*_busPanes.Clear();
+       _busPanes.Clear();
        var lineName = args.SelectedItems[0]?.LineName.Text ?? string.Empty;;
-        
-       var busLine = _linePanes.FirstOrDefault(it => it.Name == lineName) ?? 
-                           _database.GetLinesForOperatorAsync().Result.FirstOrDefault(it => it.Name == lineName);
+
+       var busLine = await _database.GetLineByNameAsync(lineName);
        
        if (busLine is null)
        {
@@ -74,11 +74,12 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
            await ShowDialog.Handle(alert);
            return;
        }
-       var buses = await _database.GetBusesForOperatorAsync(busLine);
+       
+       var buses = await _database.GetBusesForLineAsync(busLine);
        foreach (var bus in buses)
        {
-           _busPanes.Add(new BusPane());
-       }*/
+           _busPanes.Add(new BusPane(bus));
+       }
        
     }
 }

@@ -75,25 +75,35 @@ public static class DbUtils
            conn.InsertBusOperator(busOperator);
         }
         
+        var operatorLinesDict = new Dictionary<string, List<BusLine>>();
+        
         var id = 0;
         foreach (var busOperator in busOperators)
         {
             var numOfLines = random.Next(3, 9);
+            var busLines = new List<BusLine>();
             for (int i = 0; i < numOfLines ; i++)
             {
-                conn.InsertLine(new BusLine(id,$"Line-{id}",busOperator.Id ?? -1,$"Start{id}",$"End{id}"));
+                var line = new BusLine(id, $"Line-{id}", busOperator.Id, $"Start{id}", $"End{id}");
+                busLines.Add(line);
+                conn.InsertLine(line);
                 id++;
             }
+
+            operatorLinesDict[busOperator.Name] = busLines;
         }
 
         id = 0;
         foreach (var busOperator in busOperators)
         {
-            var numOfLines = random.Next(3, 9);
-            for (int i = 0; i < numOfLines ; i++)
+            var numberOfBusesOnLine = random.Next(3, 5);
+            foreach (var line in operatorLinesDict[busOperator.Name])
             {
-                conn.InsertBus(new Bus(id,$"SPZ : {id}",busOperator.Id ?? -1,random.Next(50,101)));
-                id++;
+                for (int i = 0; i < numberOfBusesOnLine ; i++)
+                {
+                    conn.InsertBus(new Bus(id,$"SPZ:{id}", busOperator.Id, line.Id,random.Next(50,101)));
+                    id++;
+                }
             }
         }
     }
@@ -124,7 +134,7 @@ public static class DbUtils
         for (int i = 0; i < buses.Length; i++)
         {
             var bus = buses[i];
-            Console.WriteLine($"ID: {bus.Id}, SPZ: {bus.Spz}, BusOperatorID: {bus.BusOperatorId}, Capacity: {bus.Capacity}");
+            Console.WriteLine($"ID: {bus.Id}, SPZ: {bus.Spz}, Capacity: {bus.Capacity} ,BusOperatorID: {bus.BusOperatorId}, LineID: {bus.LineId}");
         }
     }
     

@@ -29,7 +29,7 @@
         </Style>
     </UserControl.Styles>
     
-    <DockPanel Name="LineDisplay" Classes="LinePane" HorizontalAlignment="Stretch">
+    <DockPanel Name="BusDisplay" Classes="BusPane" HorizontalAlignment="Stretch">
         <DockPanel DockPanel.Dock="Top">
             <TextBlock Name="BusSpz" Text="{Binding Spz}"></TextBlock>
         </DockPanel>
