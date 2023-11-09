@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Text;
 using Avalonia.Controls.Documents;
-using BusLineManager.Core.Data;
+using BusLineManager.Models;
 
 namespace BusLineManager.Core.Database;
 
@@ -40,7 +40,7 @@ public static class DbUtils
     
     public static void CleanUp()
     {
-        using var connection = Database.GetConnection();;
+        using var connection = Database.GetConnection();
         connection.Open();
 
         var selectTablesQuery = "SELECT name FROM sqlite_master WHERE type='table'";
@@ -103,6 +103,14 @@ public static class DbUtils
                 for (int i = 0; i < numberOfBusesOnLine ; i++)
                 {
                     conn.InsertBus(new Bus(id,SpzBuilder(), busOperator.Id, line.Id,random.Next(50,101)));
+                    id++;
+                }
+
+                var numberOfAvailableBuses = random.Next(1, 5);
+                
+                for (int i = 0; i < numberOfAvailableBuses ; i++)
+                {
+                    conn.InsertBus(new Bus(id,SpzBuilder(), busOperator.Id,null,random.Next(50,101)));
                     id++;
                 }
             }

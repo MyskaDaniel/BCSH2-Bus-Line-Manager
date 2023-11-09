@@ -1,5 +1,5 @@
 ﻿using Avalonia.Controls;
-using BusLineManager.Core.Data;
+using BusLineManager.Models;
 using BusLineManager.ViewModels;
 
 namespace BusLineManager.Views.Controls;

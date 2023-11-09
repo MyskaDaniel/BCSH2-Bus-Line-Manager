@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.ReactiveUI;
-using BusLineManager.Core.Data;
+using BusLineManager.Models;
 using BusLineManager.ViewModels;
 using ReactiveUI;
 using BusOperatorPane = BusLineManager.Views.Controls.BusOperatorPane;

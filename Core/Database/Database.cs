@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Threading.Tasks;
-using BusLineManager.Core.Data;
+using BusLineManager.Models;
 
 namespace BusLineManager.Core.Database;
 
@@ -10,7 +10,7 @@ public class Database
 {
     private const string ConnectionString = "Data Source=buslinemanager.db;Version=3;"; //TODO readonly
 
-    public static SQLiteConnection GetConnection() => new(ConnectionString);
+    public static SQLiteConnection GetConnection() => new(ConnectionString); //For DbUtils
     
     public void InsertBusOperator(BusOperator busOperator)
     {
@@ -139,7 +139,7 @@ public class Database
                 Spz: reader.GetString(1),
                 Capacity: reader.GetInt32(2),
                 BusOperatorId: reader.GetInt64(3),
-                LineId: reader.GetInt64(4)
+                LineId: reader.IsDBNull(4) ? null : reader.GetInt64(4)
             ));
         }
 
@@ -232,7 +232,7 @@ public class Database
                 Spz: reader.GetString(1),
                 Capacity: reader.GetInt32(2),
                 BusOperatorId: reader.GetInt64(3),
-                LineId: reader.GetInt64(4)
+                LineId: reader.IsDBNull(4) ? null : reader.GetInt64(4)
             ));
         }
         
@@ -241,7 +241,7 @@ public class Database
 
     public string GetBusOperatorNameById(long id)
     {
-         using var connection = new SQLiteConnection(ConnectionString);
+        using var connection = new SQLiteConnection(ConnectionString);
         
         connection.Open();
 
@@ -257,5 +257,60 @@ public class Database
         connection.Close();
         return name;
     }
-    
+
+    public List<Bus> FindAllAvailableBusesForBusOperator(long id)
+    {
+        var buses = new List<Bus>();
+        using var connection = new SQLiteConnection(ConnectionString);
+        
+        connection.Open();
+
+        const string selectQuery = "SELECT * FROM BusesNew WHERE LineId is null AND BusOperatorId = @BusOperatorId";
+
+        using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@BusOperatorId", id);
+
+        var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+
+            buses.Add(new Bus(
+                Id: reader.GetInt64(0),
+                Spz: reader.GetString(1),
+                Capacity: reader.GetInt32(2),
+                BusOperatorId: reader.GetInt64(3),
+                LineId: reader.IsDBNull(4) ? null : reader.GetInt64(4)
+            ));
+        }
+        connection.Close();
+        return buses;
+    }
+
+    public List<Bus> FindAllBusesOnLineForBusOperator(long id)
+    {
+        var buses = new List<Bus>();
+        using var connection = new SQLiteConnection(ConnectionString);
+        
+        connection.Open();
+
+        const string selectQuery = "SELECT * FROM BusesNew WHERE LineId is not null AND BusOperatorId = @BusOperatorId";
+
+        using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@BusOperatorId", id);
+
+        var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+
+            buses.Add(new Bus(
+                Id: reader.GetInt64(0),
+                Spz: reader.GetString(1),
+                Capacity: reader.GetInt32(2),
+                BusOperatorId: reader.GetInt64(3),
+                LineId: reader.IsDBNull(4) ? null : reader.GetInt64(4)
+            ));
+        }
+        connection.Close();
+        return buses;
+    }
 }

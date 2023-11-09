@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using BusLineManager.Core.Data;
 using BusLineManager.Core.Database;
+using BusLineManager.Models;
 using ReactiveUI;
 
 namespace BusLineManager.ViewModels;

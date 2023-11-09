@@ -1,4 +1,4 @@
-﻿using BusLineManager.Core.Data;
+﻿using BusLineManager.Models;
 using ReactiveUI;
 
 namespace BusLineManager.ViewModels;

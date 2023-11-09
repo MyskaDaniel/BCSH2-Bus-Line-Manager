@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using BusLineManager.Core.Data;
+using BusLineManager.Models;
 using BusLineManager.ViewModels;
 
 namespace BusLineManager.Views.Controls;
