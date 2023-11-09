@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Text;
 using Avalonia.Controls.Documents;
 using BusLineManager.Core.Data;
 
@@ -77,7 +78,7 @@ public static class DbUtils
         
         var operatorLinesDict = new Dictionary<string, List<BusLine>>();
         
-        var id = 0;
+        var id = 1;
         foreach (var busOperator in busOperators)
         {
             var numOfLines = random.Next(3, 9);
@@ -93,7 +94,7 @@ public static class DbUtils
             operatorLinesDict[busOperator.Name] = busLines;
         }
 
-        id = 0;
+        id = 1;
         foreach (var busOperator in busOperators)
         {
             var numberOfBusesOnLine = random.Next(3, 5);
@@ -101,7 +102,7 @@ public static class DbUtils
             {
                 for (int i = 0; i < numberOfBusesOnLine ; i++)
                 {
-                    conn.InsertBus(new Bus(id,$"SPZ:{id}", busOperator.Id, line.Id,random.Next(50,101)));
+                    conn.InsertBus(new Bus(id,SpzBuilder(), busOperator.Id, line.Id,random.Next(50,101)));
                     id++;
                 }
             }
@@ -148,5 +149,12 @@ public static class DbUtils
         Console.WriteLine(rowsAffected > 0
             ? $"Deletion successful for table '{tableName}'. All records removed."
             : $"No records to delete in table '{tableName}'.");
+    }
+
+    private static string SpzBuilder()
+    {
+        var random = new Random();
+        
+        return $"{random.Next(1,10)}E{random.Next(1,10)}:{random.Next(1000,10000)}";
     }
 }

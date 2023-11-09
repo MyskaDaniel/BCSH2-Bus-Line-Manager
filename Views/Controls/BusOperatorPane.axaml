@@ -1,15 +1,22 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BusLineManager.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="BusLineManager.Views.Controls.BusOperatorPane">
+             x:Class="BusLineManager.Views.Controls.BusOperatorPane"
+             x:DataType="vm:BusOperatorPaneViewModel">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/BlockStyles.axaml" />
         <StyleInclude Source="/Styles/TextStyles.axaml" />
         
         <Style Selector="TextBlock#BusOperatorName">
             <Setter Property="FontSize" Value="28"/>
+            <Setter Property="Margin" Value="10,10,0,0"/> 
+        </Style>
+        
+        <Style Selector="TextBlock#Ico">
+            <Setter Property="FontSize" Value="20"/>
             <Setter Property="Margin" Value="10,10,0,0"/> 
         </Style>
         
@@ -26,11 +33,20 @@
     
     <DockPanel Name="BusProviderDockPanel" Classes="Dopravce" HorizontalAlignment="Stretch">
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock Name="BusOperatorName"></TextBlock>
+            <TextBlock Name="BusOperatorName" Text="{Binding BusOperatorName}" />
         </DockPanel>
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock Name="AvailableBuses"></TextBlock>
-            <TextBlock Name="OnLineBuses" DockPanel.Dock="Right"></TextBlock>
+            <TextBlock Name="Ico" Text="{Binding OperatorIco}" />
+        </DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <TextBlock Name="AvailableBuses">
+                <Run Text="Available: "></Run>
+                <Run Text="{Binding AvailableBuses}"></Run>
+            </TextBlock>
+            <TextBlock Name="OnLineBuses" DockPanel.Dock="Right">
+                <Run Text="Online: "></Run>
+                <Run Text="{Binding OnLineBuses}"></Run>
+            </TextBlock>
         </DockPanel>
     </DockPanel>
 </UserControl>

@@ -1,20 +1,25 @@
 ﻿using BusLineManager.Core.Data;
+using BusLineManager.Core.Database;
 using ReactiveUI;
 
 namespace BusLineManager.ViewModels;
 
 public class BusOperatorPaneViewModel :  ViewModelBase, IReactiveObject
 {
-    private readonly BusOperator _busOperator;
+    private readonly Database _database = new();
 
     public BusOperatorPaneViewModel(BusOperator busOperator)
     {
-        _busOperator = busOperator;
+        BusOperatorName = busOperator.Name;
+        AvailableBuses = "10";
+        OnLineBuses = "12";
+        OperatorIco = busOperator.Ico;
     }
 
-    public int AvailableBuses => 10;
+    public string AvailableBuses { get; }
 
-    public int OnLineBuses => 12;
+    public string OnLineBuses { get; }
 
-    public BusOperator BusOperator => _busOperator;
+    public string BusOperatorName { get; }
+    public string OperatorIco { get; }
 }

@@ -235,8 +235,27 @@ public class Database
                 LineId: reader.GetInt64(4)
             ));
         }
-
+        
         return buses;
+    }
+
+    public string GetBusOperatorNameById(long id)
+    {
+         using var connection = new SQLiteConnection(ConnectionString);
+        
+        connection.Open();
+
+        const string selectQuery = "SELECT * FROM BusOperators WHERE ID = @ID";
+
+        using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@ID", id);
+
+        var reader = command.ExecuteReader();
+        reader.Read();
+        var name = reader["Name"].ToString() ?? string.Empty;
+        
+        connection.Close();
+        return name;
     }
     
 }
