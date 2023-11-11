@@ -22,4 +22,6 @@ public class BusOperatorPaneViewModel :  ViewModelBase, IReactiveObject
 
     public string BusOperatorName { get; }
     public string OperatorIco { get; }
+    
+    
 }

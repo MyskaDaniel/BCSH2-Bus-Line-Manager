@@ -1,19 +1,34 @@
-﻿using BusLineManager.Models;
+﻿using System;
+using System.Threading.Tasks;
+using Avalonia.Threading;
+using BusLineManager.Models;
 using ReactiveUI;
 
 namespace BusLineManager.ViewModels;
 
 public class LinePaneViewModel :  ViewModelBase, IReactiveObject
 {
-
+    private string _busOperatorName;
     public LinePaneViewModel(BusLine busLine)
     {
-        LineName = busLine.Name;
+        _busOperatorName = busLine.Name;
         StartStation = $"Start Station: {busLine.StartStation}";
         EndStation = $"End Station: {busLine.EndStation}";
     }
 
-    public string LineName { get; }
+    public async Task UpdateUi()
+    {
+        await Task.Run(() =>
+        {
+            LineName = "lol";
+        });
+    }
+
+    public string LineName  {
+        get => _busOperatorName;
+        set => this.RaiseAndSetIfChanged(ref _busOperatorName,  value);
+    }
     public string StartStation { get; }
     public string EndStation { get; }
+    
 }

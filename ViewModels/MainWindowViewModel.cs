@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls.Selection;
 using BusLineManager.Core.Database;
 using BusLineManager.Models;
@@ -22,6 +23,8 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     public ObservableCollection<BusOperator> BusOperatorsItems => _busOperators;
     public ObservableCollection<LinePane> LinePanesItems => _linePanes;
     public ObservableCollection<BusPane> BusPanesItems => _busPanes;
+
+    public delegate void TestEvent(object sender, EventArgs args);
     
     public MainWindowViewModel()
     {
@@ -62,34 +65,50 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
         }
     }
     
-    private async void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
+    private void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
     {
        _busPanes.Clear();
        var context = args.SelectedItems[0]?.DataContext as LinePaneViewModel;
 
        if (context is null)
        {
-           var alert = new AlertViewModel("Unexpected error has occurred.");
-           await ShowDialog.Handle(alert);
+           Task.Run(() =>
+           {
+               var alert = new AlertViewModel("Unexpected error has occurred.");
+               ShowDialog.Handle(alert);
+           });
            return;
        }
        
        var lineName = context.LineName;
-
-       var busLine = await _database.GetLineByNameAsync(lineName);
+       
+       var busLine = Task.Run(() => _database.GetLineByNameAsync(lineName)).Result;
        
        if (busLine is null)
        {
-           var alert = new AlertViewModel($"Bus operator with name {lineName} was not found");
-           await ShowDialog.Handle(alert);
+           Task.Run(() =>
+           {
+               var alert = new AlertViewModel($"Bus operator with name {lineName} was not found");
+               ShowDialog.Handle(alert);
+           });
            return;
        }
        
-       var buses = await _database.GetBusesForLineAsync(busLine);
+       var buses = Task.Run(() => _database.GetBusesForLineAsync(busLine)).Result;
        foreach (var bus in buses)
        {
            _busPanes.Add(new BusPane(bus));
        }
        
+    }
+
+    public async Task UpdateTest()
+    {
+        foreach (var line in _linePanes)
+        {
+            if (line.DataContext is not LinePaneViewModel viewModel) return;
+            
+            await viewModel.UpdateUi();
+        }
     }
 }

@@ -42,7 +42,7 @@
         </StackPanel>
         
         <StackPanel Grid.Row="0" Grid.Column="0" Classes="ControlPaneLeft">
-            <Button Classes="Control" HorizontalAlignment="Left">
+            <Button Classes="Control" HorizontalAlignment="Left" Command="{Binding UpdateTest }">
                 <Image Source="/Assets/icons8-add-64.png" ></Image>
             </Button>
 
