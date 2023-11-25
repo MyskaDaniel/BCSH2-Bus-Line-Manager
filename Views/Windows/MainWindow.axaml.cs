@@ -17,7 +17,9 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
         InitializeComponent();
         var viewModel = new MainWindowViewModel();
+        
         this.WhenActivated(d => d(ViewModel!.ShowDialog.RegisterHandler(DoShowDialogAsync)));
+        this.WhenActivated(d => d(ViewModel!.ShowEditDialog.RegisterHandler(ShowLineEditDialogAsync)));
         
         var listBox = this.FindControl<ListBox>("BusOperatorListBox") ?? throw new Exception("Could load Control DopravceList");
 
@@ -43,4 +45,14 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
         interaction.SetOutput(result);
     }
     
+    private async Task ShowLineEditDialogAsync(InteractionContext<EditLineViewModel, bool> interaction)
+    {
+        var dialog = new EditLineWindow
+        {
+            DataContext = interaction.Input
+        };
+
+        var result = await dialog.ShowDialog<bool>(this);
+        interaction.SetOutput(result);
+    }
 }

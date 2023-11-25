@@ -313,4 +313,20 @@ public class Database
         connection.Close();
         return buses;
     }
+
+    public int DeleteBusOperator(BusOperator busOperator)
+    {
+        using var connection = new SQLiteConnection(ConnectionString);
+        
+        connection.Open();
+
+        const string selectQuery = "DELETE FROM BusOperators WHERE BusOperators.ID = @BusOperatorId";
+
+        using var command = new SQLiteCommand(selectQuery, connection);
+        command.Parameters.AddWithValue("@BusOperatorId", busOperator.Id);
+
+        var result = command.ExecuteNonQuery();
+        connection.Close();
+        return result;
+    }
 }

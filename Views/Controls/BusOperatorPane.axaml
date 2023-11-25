@@ -48,6 +48,12 @@
                 <Run Text="{Binding OnLineBuses}"></Run>
             </TextBlock>
         </DockPanel>
+        <DockPanel.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Edit" Command="{Binding EditBusOperator}" />
+                <MenuItem Header="Delete" Command="{Binding DeleteBusOperator}"/>
+            </ContextMenu>
+        </DockPanel.ContextMenu>
     </DockPanel>
 </UserControl>
 

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Selection;
 using BusLineManager.Core.Database;
@@ -23,12 +24,12 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     public ObservableCollection<BusOperator> BusOperatorsItems => _busOperators;
     public ObservableCollection<LinePane> LinePanesItems => _linePanes;
     public ObservableCollection<BusPane> BusPanesItems => _busPanes;
-
-    public delegate void TestEvent(object sender, EventArgs args);
     
     public MainWindowViewModel()
     {
         ShowDialog = new Interaction<AlertViewModel, bool>();
+        ShowEditDialog = new Interaction<EditLineViewModel, bool>();
+        
         _busOperators.AddRange( _database.GetAllBusOperators());
         
         BusOperatorSelection = new SelectionModel<BusOperatorPane>();
@@ -41,15 +42,15 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     public SelectionModel<LinePane> LinesSelection { get; }
     
     public Interaction<AlertViewModel, bool> ShowDialog { get; }
+    public Interaction<EditLineViewModel, bool> ShowEditDialog { get; }
     
     private async void BusOperatorSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<BusOperatorPane> args)
     {
         _linePanes.Clear();
         _busPanes.Clear();
         var busOperatorName = args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
-        
-        var busOperator = _busOperators.FirstOrDefault(it => it.Name == busOperatorName) ?? 
-                          _database.GetAllBusOperators().FirstOrDefault(it => it.Name == busOperatorName);
+
+        var busOperator = FindBusOperatorOfName(busOperatorName);
         
         if (busOperator is null)
         {
@@ -82,7 +83,7 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
        
        var lineName = context.LineName;
        
-       var busLine = Task.Run(() => _database.GetLineByNameAsync(lineName)).Result;
+       var busLine = Task.Run(() => _database.GetLineByNameAsync(lineName)).Result; //TODO refactor .Result
        
        if (busLine is null)
        {
@@ -108,7 +109,24 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
         {
             if (line.DataContext is not LinePaneViewModel viewModel) return;
             
-            await viewModel.UpdateUi();
+            await viewModel.UpdateUi(new CancellationToken());
         }
+    }
+
+    public async Task EditWindow()
+    {
+        if (LinesSelection.SelectedItems[0]?.DataContext is not LinePaneViewModel context)
+        {
+            return;
+        }
+        
+        var dialog = new EditLineViewModel(context);
+        await ShowEditDialog.Handle(dialog);
+    }
+
+    private BusOperator? FindBusOperatorOfName(string busOperatorName)
+    {
+        return _busOperators.FirstOrDefault(it => it.Name == busOperatorName) ?? 
+               _database.GetAllBusOperators().FirstOrDefault(it => it.Name == busOperatorName);
     }
 }

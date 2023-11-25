@@ -1,16 +1,18 @@
-﻿using BusLineManager.Core.Service;
+﻿using System;
+using BusLineManager.Core.Service;
 using BusLineManager.Models;
+using BusLineManager.Views.Controls;
 using ReactiveUI;
 
 namespace BusLineManager.ViewModels;
 
 public class BusOperatorPaneViewModel :  ViewModelBase, IReactiveObject
 {
-    private readonly BusAvailabilityService _service;
+    private readonly BusOperatorService _service;
 
     public BusOperatorPaneViewModel(BusOperator busOperator)
     {
-        _service = new BusAvailabilityService(busOperator);
+        _service = new BusOperatorService(busOperator);
         
         BusOperatorName = busOperator.Name;
         OperatorIco = busOperator.Ico;
@@ -22,6 +24,16 @@ public class BusOperatorPaneViewModel :  ViewModelBase, IReactiveObject
 
     public string BusOperatorName { get; }
     public string OperatorIco { get; }
+
+    public void DeleteBusOperator()
+    {
+        _service.DeleteBusOperator();
+    }
+
+    public void EditBusOperator()
+    {
+        
+    }
     
     
 }
