@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls.Selection;
+using BusLineManager.Core;
 using BusLineManager.Core.Database;
 using BusLineManager.Models;
 using BusLineManager.Views.Controls;
@@ -21,6 +21,10 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     private readonly ObservableCollection<LinePane> _linePanes = new();
     private readonly ObservableCollection<BusPane> _busPanes = new();
 
+    private BusOperatorPaneViewModel? _selectedBusOperatorVm;
+    private LinePaneViewModel? _selectedLinePaneVm;
+    private BusPaneViewModel? _selectedBusPaneVm;
+
     public ObservableCollection<BusOperator> BusOperatorsItems => _busOperators;
     public ObservableCollection<LinePane> LinePanesItems => _linePanes;
     public ObservableCollection<BusPane> BusPanesItems => _busPanes;
@@ -28,27 +32,46 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     public MainWindowViewModel()
     {
         ShowDialog = new Interaction<AlertViewModel, bool>();
-        ShowEditDialog = new Interaction<EditLineViewModel, bool>();
+        ShowEditLineDialog = new Interaction<EditLineViewModel, bool>();
+        ShowEditBusOperatorDialog = new Interaction<EditBusOperatorViewModel, bool>();
         
         _busOperators.AddRange( _database.GetAllBusOperators());
         
         BusOperatorSelection = new SelectionModel<BusOperatorPane>();
         BusOperatorSelection.SelectionChanged += BusOperatorSelectionChanged;
+        
         LinesSelection = new SelectionModel<LinePane>();
         LinesSelection.SelectionChanged += LinesSelectionChanged;
+        
+        BusPaneSelection = new SelectionModel<BusPane>();
+        BusPaneSelection.SelectionChanged += BusPaneSelectionChanged;
     }
     
     public SelectionModel<BusOperatorPane> BusOperatorSelection { get; }
     public SelectionModel<LinePane> LinesSelection { get; }
+    public SelectionModel<BusPane> BusPaneSelection { get; }
     
     public Interaction<AlertViewModel, bool> ShowDialog { get; }
-    public Interaction<EditLineViewModel, bool> ShowEditDialog { get; }
+    public Interaction<EditLineViewModel, bool> ShowEditLineDialog { get; }
+    public Interaction<EditBusOperatorViewModel, bool> ShowEditBusOperatorDialog { get; }
+    
     
     private async void BusOperatorSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<BusOperatorPane> args)
     {
+        //Check if call was done by unselecting item, in that case we dont want to update ui
+        var vm = ViewModelGetter.GetViewModel<BusOperatorPaneViewModel,BusOperatorPane>(args);
+        if (_selectedBusOperatorVm == vm)
+        {
+            _selectedBusOperatorVm = null;
+            return;
+        }
+
+        _selectedBusOperatorVm = vm;
+        
         _linePanes.Clear();
         _busPanes.Clear();
-        var busOperatorName = args.SelectedItems[0]?.BusOperatorName.Text ?? string.Empty;
+        _selectedBusPaneVm = null;
+        var busOperatorName = _selectedBusOperatorVm?.BusOperatorName ?? string.Empty;
 
         var busOperator = FindBusOperatorOfName(busOperatorName);
         
@@ -68,7 +91,18 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
     
     private void LinesSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<LinePane> args)
     {
+        //Check if call was done by unselecting item, in that case we dont want to update ui
+        var vm = ViewModelGetter.GetViewModel<LinePaneViewModel,LinePane>(args);
+        if (_selectedLinePaneVm == vm)
+        {
+            _selectedLinePaneVm = null;
+            return;
+        }
+
+        _selectedLinePaneVm = vm;
+
        _busPanes.Clear();
+       _selectedBusPaneVm = null;
        var context = args.SelectedItems[0]?.DataContext as LinePaneViewModel;
 
        if (context is null)
@@ -101,6 +135,13 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
            _busPanes.Add(new BusPane(bus));
        }
        
+       BusOperatorSelection.Deselect(BusOperatorSelection.SelectedIndex);
+    }
+    
+    private void BusPaneSelectionChanged(object? sender, SelectionModelSelectionChangedEventArgs<BusPane> e)
+    {
+        _selectedBusPaneVm = ViewModelGetter.GetViewModel<BusPaneViewModel,BusPane>(e);
+        LinesSelection.Deselect(LinesSelection.SelectedIndex);
     }
 
     public async Task UpdateTest()
@@ -121,7 +162,7 @@ public class MainWindowViewModel : ViewModelBase, IReactiveObject
         }
         
         var dialog = new EditLineViewModel(context);
-        await ShowEditDialog.Handle(dialog);
+        await ShowEditLineDialog.Handle(dialog);
     }
 
     private BusOperator? FindBusOperatorOfName(string busOperatorName)
